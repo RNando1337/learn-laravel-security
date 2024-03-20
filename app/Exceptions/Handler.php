@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Traits\HttpResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -35,11 +36,11 @@ class Handler extends ExceptionHandler
                 Message: '.$errorMessage.'
                 Error Trace: '.$errorTrace.'
             ');
-            if(!auth()->user()){
+            if(!auth()->user() && !auth()->guest()){
                 $message = "Unauthorized";
                 $responseCode = 401;
+                return $this->apiResponseErrors(message:$message, code: $responseCode);
             }
-            return $this->apiResponseErrors(message:$message, code: $responseCode);
         });
     }
 }
