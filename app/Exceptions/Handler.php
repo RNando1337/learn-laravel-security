@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (Throwable $e) {
-            $message = "Terjadi Kesalahan Pada Sistem!!";
+            $message = "Internal Server Error";
             $responseCode = 500;
             $errorMessage = $e->getMessage();
             $errorTrace = json_encode($e->getTrace());
@@ -39,8 +39,8 @@ class Handler extends ExceptionHandler
             if(!auth()->user() && !auth()->guest()){
                 $message = "Unauthorized";
                 $responseCode = 401;
-                return $this->apiResponseErrors(message:$message, code: $responseCode);
             }
+            return $this->apiResponseErrors(message:$message, code: $responseCode);
         });
     }
 }
