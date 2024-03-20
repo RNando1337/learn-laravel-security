@@ -48,7 +48,6 @@ class AuthController extends Controller
 
     public function refresh()
     {
-
         try{
             $token = auth()->refresh();
         }catch(TokenInvalidException $err){
