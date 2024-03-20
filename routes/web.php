@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 Route::get('/xss-sample', [ViewController::class, 'xss']);
 Route::get('/path-traversal', [ViewController::class, 'pathTraversal']);
+Route::get('/redirect', [ViewController::class, 'redirect']);

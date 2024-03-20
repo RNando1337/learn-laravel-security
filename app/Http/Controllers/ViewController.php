@@ -35,5 +35,15 @@ class ViewController extends Controller
             return response()->download($file);
         }
 
+        // Todo: make example for prevent code from path traversal attack
+    }
+
+    public function redirect()
+    {
+        if(request('location') != null){
+            return redirect(request('location'));
+        }
+
+        // Todo: make example code for prevent from open redirect attack
     }
 }
