@@ -46,4 +46,13 @@ class ViewController extends Controller
 
         // Todo: make example code for prevent from open redirect attack
     }
+
+    public function injection()
+    {
+        if(request('domain') != null){
+            return system('whois '.request('domain'));
+        }
+
+        // Todo: make example code for prevent code injection
+    }
 }
