@@ -35,7 +35,22 @@ class ViewController extends Controller
             return response()->download($file);
         }
 
-        // Todo: make example for prevent code from path traversal attack
+        // prevent code
+        if(request('view_patch') != null){
+            $file = basename(base_path('/').request('view_patch'));
+
+            if (file_exists($file)) {
+                return file_get_contents($file);
+            } else {
+                echo "File not found!";
+            }
+        }
+
+        if(request('download_patch') != null){
+            $file = basename(base_path('/').request('download_patch'));
+
+            return response()->download($file);
+        }
     }
 
     public function redirect()
@@ -44,7 +59,20 @@ class ViewController extends Controller
             return redirect(request('location'));
         }
 
-        // Todo: make example code for prevent from open redirect attack
+        //prevent code
+
+        // with whitelist method
+        $accepted_site = ["https://www.google.com", url(''), '/home'];
+        if(request('location_whitelist') != null && in_array(request('location_whitelist'), $accepted_site)){
+            return redirect(request('location_whitelist'));
+        }
+
+        // with regex
+        $regex_pattern = '/[a-zA-Z]*?.?(?:google|facebook|youtube)(?:.)[a-zA-Z]+/';
+        if(preg_match($regex_pattern, request('location_regex')))
+        {
+            return redirect(request('location_regex'));
+        }
     }
 
     public function injection()
@@ -53,6 +81,8 @@ class ViewController extends Controller
             return system('whois '.request('domain'));
         }
 
-        // Todo: make example code for prevent code injection
+        if(request('injection_patch') != null){
+            return system('whois '.escapeshellcmd(request('injection_patch')));
+        }
     }
 }
