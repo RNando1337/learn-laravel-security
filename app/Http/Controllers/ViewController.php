@@ -33,7 +33,7 @@ class ViewController extends Controller
          * http://127.0.0.1:8000/path-traversal?download_patch=.env
          * 
          */
-        if(request('view') != null){
+        if(request('view')){
             $file = base_path('/').request('view');
 
             if (file_exists($file)) {
@@ -43,14 +43,14 @@ class ViewController extends Controller
             }
         }
 
-        if(request('download') != null){
+        if(request('download')){
             $file = base_path('/').request('download');
 
             return response()->download($file);
         }
 
         // prevent code
-        if(request('view_patch') != null){
+        if(request('view_patch')){
             $file = basename(base_path('/').request('view_patch'));
 
             if (file_exists($file)) {
@@ -60,7 +60,7 @@ class ViewController extends Controller
             }
         }
 
-        if(request('download_patch') != null){
+        if(request('download_patch')){
             $file = basename(base_path('/').request('download_patch'));
 
             return response()->download($file);
@@ -77,7 +77,7 @@ class ViewController extends Controller
          * http://127.0.0.1:8000/redirect?location_regex=https://example.com
          * 
          */
-        if(request('location') != null){
+        if(request('location')){
             return redirect(request('location'));
         }
 
@@ -85,7 +85,7 @@ class ViewController extends Controller
 
         // with whitelist method
         $accepted_site = ["https://www.google.com", url(''), '/home'];
-        if(request('location_whitelist') != null && in_array(request('location_whitelist'), $accepted_site)){
+        if(request('location_whitelist') && in_array(request('location_whitelist'), $accepted_site)){
             return redirect(request('location_whitelist'));
         }
 
@@ -106,11 +106,11 @@ class ViewController extends Controller
          * http://127.0.0.1:8000/injection?injection_patch=www.google.com;ls -a
          * 
          */
-        if(request('domain') != null){
+        if(request('domain')){
             return system('whois '.request('domain'));
         }
 
-        if(request('injection_patch') != null){
+        if(request('injection_patch')){
             return system('whois '.escapeshellcmd(request('injection_patch')));
         }
     }
@@ -124,7 +124,7 @@ class ViewController extends Controller
          * http://127.0.0.1:8000/sql-injection?email_vuln='1' OR email LIKE '%%'
          * 
          */
-        if(request('email_vuln') !== null){
+        if(request('email_vuln')){
             $user = DB::table('users')->whereRaw('email = '.request('email_vuln').'')->first();
             return $user;
         }
