@@ -13,6 +13,10 @@ class ViewController extends Controller
 {
     public function xss()
     {
+        /**
+         * You can set this payload <script>alert(1)</script> maybe in name field on the users table then see on http://127.0.0.1:8000/xss-sample
+         */
+
         $users = User::all();
 
         return view('xss', ["users" => $users]);
@@ -20,6 +24,15 @@ class ViewController extends Controller
 
     public function pathTraversal()
     {
+        /**
+         * You can try this payload to see the difference
+         *
+         * http://127.0.0.1:8000/path-traversal?view=.env
+         * http://127.0.0.1:8000/path-traversal?download=.env
+         * http://127.0.0.1:8000/path-traversal?view_patch=.env
+         * http://127.0.0.1:8000/path-traversal?download_patch=.env
+         * 
+         */
         if(request('view') != null){
             $file = base_path('/').request('view');
 
@@ -56,6 +69,14 @@ class ViewController extends Controller
 
     public function redirect()
     {
+        /**
+         * You can try this payload to see the difference
+         *
+         * http://127.0.0.1:8000/redirect?location=https://www.google.com
+         * http://127.0.0.1:8000/redirect?location_whitelist=https://example.com
+         * http://127.0.0.1:8000/redirect?location_regex=https://example.com
+         * 
+         */
         if(request('location') != null){
             return redirect(request('location'));
         }
@@ -78,6 +99,13 @@ class ViewController extends Controller
 
     public function injection()
     {
+        /**
+         * You can try this payload to see the difference
+         *
+         * http://127.0.0.1:8000/injection?domain=www.google.com;ls -a
+         * http://127.0.0.1:8000/injection?injection_patch=www.google.com;ls -a
+         * 
+         */
         if(request('domain') != null){
             return system('whois '.request('domain'));
         }
@@ -89,6 +117,13 @@ class ViewController extends Controller
 
     public function sqlInjection()
     {
+        /**
+         * You can try this payload to see the difference
+         *
+         * http://127.0.0.1:8000/sql-injection?email='1' OR email LIKE '%%'
+         * http://127.0.0.1:8000/sql-injection?email_vuln='1' OR email LIKE '%%'
+         * 
+         */
         if(request('email_vuln') !== null){
             $user = DB::table('users')->whereRaw('email = '.request('email_vuln').'')->first();
             return $user;
