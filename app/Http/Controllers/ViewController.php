@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Request;
 use App\Models\User;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 
 use function Termwind\render;
 
@@ -83,6 +84,20 @@ class ViewController extends Controller
 
         if(request('injection_patch') != null){
             return system('whois '.escapeshellcmd(request('injection_patch')));
+        }
+    }
+
+    public function sqlInjection()
+    {
+        if(request('email_vuln') !== null){
+            $user = DB::table('users')->whereRaw('email = '.request('email_vuln').'')->first();
+            return $user;
+        }
+
+        //prevent code
+        if(request('email')){
+            $user = DB::table('users')->where('email', request('email'))->first();
+            return $user;
         }
     }
 }
