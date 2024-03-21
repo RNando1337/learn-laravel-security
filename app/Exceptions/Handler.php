@@ -31,9 +31,11 @@ class Handler extends ExceptionHandler
             $message = "Internal Server Error";
             $responseCode = 500;
             $errorMessage = $e->getMessage();
+            $payload = json_encode(request()->all());
             $errorTrace = json_encode($e->getTrace());
             Log::error('
                 Message: '.$errorMessage.'
+                Payload: '.$payload.'
                 Error Trace: '.$errorTrace.'
             ');
             if(!auth()->user() && !auth()->guest()){
